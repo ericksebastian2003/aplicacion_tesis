@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   Future<String?> login(String email,String password) async{
     await Future.delayed(const Duration(seconds: 2));
-    if(email == 'ericksebastian@mail.com' && password == 'Sebas123'){
-      return 'admin';
+    if(email == 'ericksebastian@mail.com' && password == '12345678'){
+      return 'user';
 
     }
     else{

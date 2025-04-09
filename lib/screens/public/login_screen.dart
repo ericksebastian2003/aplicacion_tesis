@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../admin/admin_dashboard.dart';
-import '../users/user_dashboard.dart';
+import '../users/widgets/user_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'register_screen.dart';
 
@@ -75,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Escucha los cambios de foco para actualizar la UI
     _emailFocusNode.addListener(() => setState(() {}));
     _passwordFocusNode.addListener(() => setState(() {}));
   }
