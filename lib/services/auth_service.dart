@@ -54,4 +54,21 @@ class AuthService {
       };
     }
   }
+  //Fucnion para guardar el estado global de logged
+  Future<void> saveSession(String correo,{required String role}) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString('userEmail',correo);
+    await prefs.setString('userRole', role);
+  }
+}
+// VERIFICAR LA SESION INICADA
+Future<bool> isLoggedIn() async{
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('isLoggedIn') ?? false;
+}
+
+Future<String?> getLoggedUserEmail () async{
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userEmail');
 }

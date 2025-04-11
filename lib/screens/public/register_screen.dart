@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:hotels/screens/public/login_screen.dart';
+import 'package:hotels/screens/users/widgets/user_dashboard.dart';
 import 'package:hotels/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -20,7 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'telefono': TextEditingController(),
     'email': TextEditingController(),
     'password': TextEditingController(),
-    'diaNacimiento': TextEditingController(),
   };
 
   final Map<String, FocusNode> _focusNodes = {
@@ -30,11 +31,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'telefono': FocusNode(),
     'email': FocusNode(),
     'password': FocusNode(),
-    'diaNacimiento': FocusNode(),
   };
 
   bool _isPasswordVisible = false;
   bool loading = false;
+  DateTime? _dateSelected;
 
   final authService = AuthService();
 
@@ -52,8 +53,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _dateSelected ?? DateTime(2000),
+      firstDate: DateTime(1960),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _dateSelected) {
+      setState(() {
+        _dateSelected = picked;
+      });
+    }
+  }
+
   void register() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate() || _dateSelected == null) return;
     setState(() => loading = true);
 
     final userData = {
@@ -63,19 +78,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'telefono': _controllers['telefono']!.text.trim(),
       'email': _controllers['email']!.text.trim(),
       'password': _controllers['password']!.text.trim(),
-      'diaNacimiento': _controllers['diaNacimiento']!.text.trim(),
+      'diaNacimiento': DateFormat('yyyy-MM-dd').format(_dateSelected!),
     };
 
     final response = await authService.register(userData);
     setState(() => loading = false);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(response != null && response['message'] != null
-            ? response['message']
-            : 'Error desconocido'),
-      ),
-    );
+    if (response != null && response['success'] == true) {
+      await authService.saveSession(userData['email']!, role: 'user');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response['message'] ?? 'Registro exitoso')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserDashboard(correo: userData['email']!),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response?['message'] ?? 'Error al registrar')),
+      );
+    }
   }
 
   @override
@@ -107,42 +131,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            _buildTextFormField(
-                              'nombre',
-                              'Nombre',
-                              icon: Icon(Icons.account_circle, color: colorPrimary),
-                            ),
-                            _buildTextFormField(
-                              'apellido',
-                              'Apellido',
-                              icon: Icon(Icons.account_circle, color: colorPrimary),
-                            ),
-                            _buildTextFormField(
-                              'cedula',
-                              'Número de cédula',
-                              icon: Icon(Icons.credit_card, color: colorPrimary),
-                            ),
-                            _buildTextFormField(
-                              'telefono',
-                              'Número de teléfono',
-                              icon: Icon(Icons.phone, color: colorPrimary),
-                            ),
-                            _buildTextFormField(
-                              'email',
-                              'Correo electrónico',
-                              focusNode: _focusNodes['email'],
-                              icon: Icon(Icons.email, color: colorPrimary),
-                            ),
-                            _buildPasswordField(
-                              'password',
-                              'Contraseña',
-                              icon: Icon(Icons.lock, color: colorPrimary),
-                            ),
-                            _buildTextFormField(
-                              'diaNacimiento',
-                              'Fecha de nacimiento',
-                              icon: Icon(Icons.date_range, color: colorPrimary),
-                            ),
+                            _buildTextFormField('nombre', 'Nombre'),
+                            _buildTextFormField('apellido', 'Apellido'),
+                            _buildTextFormField('cedula', 'Número de cédula'),
+                            _buildTextFormField('telefono', 'Número de teléfono'),
+                            _buildTextFormField('email', 'Correo electrónico'),
+                            _buildPasswordField('password', 'Contraseña'),
+                            _buildDatePickerField(),
                             const SizedBox(height: 20),
                             Center(
                               child: loading
@@ -178,10 +173,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   backgroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    side: BorderSide(
-                                      color: colorPrimary,
-                                      width: 2,
-                                    ),
+                                    side: BorderSide(color: colorPrimary, width: 2),
                                   ),
                                 ),
                                 child: Text(
@@ -209,44 +201,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTextFormField(String key, String labelText,
-      {FocusNode? focusNode, Icon? icon}) {
+  Widget _buildTextFormField(String key, String labelText) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: _controllers[key],
-        focusNode: focusNode,
+        focusNode: _focusNodes[key],
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: icon ?? Icon(
-              Icons.person,
-              size: 20,
-              color: focusNode?.hasFocus ?? false ? colorPrimary : Colors.grey,
-            ),
-          ),
+          labelText: labelText,
           filled: true,
           fillColor: Colors.white,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: const BorderSide(color: Colors.white),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: const BorderSide(color: Colors.white, width: 4),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: colorPrimary, width: 2),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: colorPrimary, width: 2),
-          ),
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.black, fontSize: 16),
-          errorStyle: const TextStyle(color: Colors.white),
+          prefixIcon: Icon(Icons.person, color: colorPrimary),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -258,17 +224,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildPasswordField(String key, String labelText, {Icon? icon}) {
+  Widget _buildPasswordField(String key, String labelText) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: _controllers[key],
-        focusNode: _focusNodes[key],
         obscureText: !_isPasswordVisible,
         decoration: InputDecoration(
           labelText: labelText,
           filled: true,
           fillColor: Colors.white,
+          prefixIcon: Icon(Icons.lock, color: colorPrimary),
           suffixIcon: IconButton(
             icon: Icon(
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -280,10 +246,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               });
             },
           ),
-          prefixIcon: icon,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -291,6 +254,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
           return null;
         },
+      ),
+    );
+  }
+
+  Widget _buildDatePickerField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: InkWell(
+        onTap: () => _selectDate(context),
+        child: InputDecorator(
+          decoration: InputDecoration(
+            labelText: 'Fecha de nacimiento',
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            prefixIcon: Icon(Icons.date_range, color: colorPrimary),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _dateSelected != null
+                    ? DateFormat.yMMMd().format(_dateSelected!)
+                    : 'Seleccione una fecha',
+                style: TextStyle(
+                  color: _dateSelected != null ? Colors.black : Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
+        ),
       ),
     );
   }

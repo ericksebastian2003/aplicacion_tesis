@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotels/screens/users/screens/account_screen.dart';
 import 'package:hotels/screens/users/screens/explore_screen.dart';
 class UserDashboard extends StatefulWidget{
   final String correo;
@@ -8,14 +9,15 @@ class UserDashboard extends StatefulWidget{
 }
 class _UserDashboardState extends State<UserDashboard>{
   int currentPageIndex = 0;
-  final List<Widget> _pages =[
-    ExploreScreen(),
-    Center(child: Text('Favoritos')),
-    Center(child: Text('Cuenta')),
-  ];
+  
   @override
 
   Widget build(BuildContext context) {
+    final List<Widget> _pages =[
+    ExploreScreen(),
+    Center(child: Text('Favoritos')),
+    AccountScreen(nombre: widget.correo),
+  ];
     return Scaffold(
       body: _pages[currentPageIndex],
       bottomNavigationBar: userNavigationBar(

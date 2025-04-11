@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotels/screens/users/widgets/detail_screen.dart';
 import 'package:hotels/services/obtener_datos.dart';
 import '../../../models/Destino.dart';
 
@@ -69,7 +70,15 @@ class CardPassages extends StatelessWidget{
   const CardPassages({super.key , required this.destino});
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return InkWell(
+      onTap: (){
+        Navigator.pushReplacement(
+          context, 
+          MaterialPageRoute(builder: (context) => DetailScreen(destino: destino),
+          ),
+          );
+      },
+    child:  Card(
               elevation: 4,
               margin : const EdgeInsets.symmetric(
                 vertical: 8,
@@ -114,6 +123,7 @@ class CardPassages extends StatelessWidget{
             ],
       
           ),
-        );
+        )
+    );
     }
   }
