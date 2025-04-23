@@ -4,7 +4,7 @@ class AuthService {
   Future<String?> login(String email,String password) async{
     await Future.delayed(const Duration(seconds: 2));
     if(email == 'ericksebastian@mail.com' && password == '12345678'){
-      return 'user';
+      return 'huesped';
 
     }
     else{

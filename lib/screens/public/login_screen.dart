@@ -36,18 +36,31 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text.trim(),
     );
     setState(() => loading = false);
-    if (role == 'user') {
+    if (role == 'huesped') {
       String correo = _emailController.text.trim();
       final auth = AuthService();
       await saveEmail(correo);
-      await auth.saveSession(correo, role: 'user');
+      await auth.saveSession(correo, role: 'huesped');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) => UserDashboard(correo: correo),
         ),
       );
-    } else if (role == 'admin') {
+    }
+     if (role == 'anfitrion') {
+      String correo = _emailController.text.trim();
+      final auth = AuthService();
+      await saveEmail(correo);
+      await auth.saveSession(correo, role: 'anfitrion');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => UserDashboard(correo: correo),
+        ),
+      );
+    }  
+    else if (role == 'admin') {
       String correo = _emailController.text.trim();
       await saveEmail(correo);
       Navigator.pushReplacement(
