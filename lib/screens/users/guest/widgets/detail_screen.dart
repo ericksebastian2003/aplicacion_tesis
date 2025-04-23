@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/Destino.dart';
+import '../../../../models/Destino.dart';
 class DetailScreen extends StatelessWidget{
   final Destino destino;
   const DetailScreen({
