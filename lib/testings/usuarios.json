@@ -1,0 +1,17 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "correo": "ericksebas1@mail.com",
+        "contrasena": "12345678",
+        "rol": "huesped"
+      },
+      {
+        "id": 2,
+        "correo": "admin@mail.com",
+        "contrasena": "adminpass",
+        "rol": "admin"
+      }
+    ]
+  }
+  
