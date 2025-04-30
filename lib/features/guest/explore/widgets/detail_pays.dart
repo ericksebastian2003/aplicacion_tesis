@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../auth/models/Destino.dart';
+import '../../../../data/models/Destino.dart';
 
 class DetailPays extends StatelessWidget {
   final Destino destino;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotels/features/guest/explore/widgets/detail_pays.dart';
 
-import '../../../auth/models/Destino.dart';
+import '../../../../data/models/Destino.dart';
 class DetailScreen extends StatelessWidget{
   final Destino destino;
   const DetailScreen({

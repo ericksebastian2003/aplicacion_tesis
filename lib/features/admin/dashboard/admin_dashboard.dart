@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:hotels/features/admin/reports/report_screen.dart';
-import 'package:hotels/features/guest/dashboard/guest_dashboard.dart';
+import '../reports/report_screen.dart';
 class AdminDashboard extends StatefulWidget {
   final String correo;
   final String rol;

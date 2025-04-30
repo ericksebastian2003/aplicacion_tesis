@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../../auth/models/Reportes.dart';
+import '../../../../data/models/Reportes.dart';
 Future<List<Reportes>> obtenerReportes() async{
   List<Reportes> reportesGenerados = [];
   

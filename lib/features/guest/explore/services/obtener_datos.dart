@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../auth/models/Destino.dart';
+import '../../../../data/models/Destino.dart';
 //Obtener los datos de los luagres
 Future<List<Destino>> obtenerDestinos() async {
   final String url = 'https://pokeapi.co/api/v2/pokemon?limit=20';

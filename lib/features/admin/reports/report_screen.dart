@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../auth/models/Reportes.dart';
+import '../../../data/models/Reportes.dart';
 import 'services/obtener_reportes.dart';
 import 'detail_report.dart';
 class ReportScreen extends StatefulWidget{

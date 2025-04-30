@@ -16,11 +16,12 @@ class AuthService {
     return null;
   }
 
-  Future<void> saveSession(String email, {required String rol}) async {
+  Future<void> saveSession(String email, {required String rol , required String nombre}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
     await prefs.setString('email', email);
     await prefs.setString('rol', rol);
+    await prefs.setString('nombre', nombre);
   }
 
   

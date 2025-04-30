@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/features/auth/models/Reportes.dart';
+import 'package:hotels/data/models/Reportes.dart';
 
 class DetailReport extends StatelessWidget{
   final Reportes reportes;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hotels/features/host/dashboard/host_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../services/auth_service.dart';
 import '../../admin/dashboard/admin_dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,17 +74,22 @@ class _LoginScreenState extends State<LoginScreen> {
 */
 
 
-  void handleLoginSuccess(String correo, String rol) async {
+  void handleLoginSuccess(String correo, String rol , String nombreCompleto) async {
     await saveEmail(correo);
-    await authService.saveSession(correo, rol: rol);
+    await authService.saveSession(correo, rol: rol , nombre : nombreCompleto);
 
     Widget destination;
     if (rol == 'admin') {
       destination = AdminDashboard(correo: correo , rol : rol);
-    } else {
+    } else if (rol == 'huesped'){
       destination = GuestDashboard(correo: correo, rol: rol);
     }
-
+    else if( rol == 'anfitrion'){
+      destination = HostDashboard(correo: correo, rol: rol , nombre: nombreCompleto);
+    }
+    else{
+      destination = LoginScreen();
+    }
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => destination),
@@ -103,7 +108,10 @@ void login() async {
 
   if (user != null) {
     final rol = user['rol'];
-    handleLoginSuccess(email, rol);
+    saveEmail(email);
+    final nombreCompleto = '${user['nombre']} ${user['apellido']}';
+    await authService.saveSession(email,rol: rol,nombre : nombreCompleto);
+    handleLoginSuccess(email, rol , nombreCompleto);
   } else {
     setState(() => loading = false);
     ScaffoldMessenger.of(context).showSnackBar(

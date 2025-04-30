@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotels/features/guest/explore/widgets/detail_screen.dart';
 import 'package:hotels/features/guest/explore/services/obtener_datos.dart';
-import '../../auth/models/Destino.dart';
+import '../../../data/models/Destino.dart';
 
 class ExploreScreen extends StatefulWidget{
 

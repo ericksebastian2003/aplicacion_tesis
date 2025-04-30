@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hotels/features/guest/dashboard/guest_dashboard.dart';
+import 'package:hotels/features/host/advertisements/advertisements_screen.dart';
 
 class HostDashboard extends StatefulWidget{
   final String correo;
   final String rol;
+  final String nombre;
 
   const HostDashboard({
     super.key,
     required this.correo,
     required this.rol,
+    required this.nombre,
   });
   @override
   State<HostDashboard> createState() => _HostDashboardState();
@@ -16,10 +19,11 @@ class HostDashboard extends StatefulWidget{
 
 class _HostDashboardState extends State<HostDashboard>{
   int currentPageIndex = 0;
+
   @override
   Widget build(BuildContext context){
     final List<Widget> _pages = [
-      Center(child: Text('Anuncios')),
+      AdvertisementsScreen(nombre:widget.nombre),
       Center(child: Text('Reservas')),
       Center(child: Text('Cuenta')),
     ];
@@ -47,8 +51,8 @@ Widget hostNavigationBar({required int currentIndex , required Function(int ) on
         label: 'Anuncios'
       ), 
          NavigationDestination(
-          icon: Icon(Icons.auto_awesome_mosaic_outlined),
-          selectedIcon: Icon(Icons.auto_awesome_mosaic),
+          icon: Icon(Icons.assessment_outlined),
+          selectedIcon: Icon(Icons.assessment),
           label: 'Reservas'
          ),
          NavigationDestination(
