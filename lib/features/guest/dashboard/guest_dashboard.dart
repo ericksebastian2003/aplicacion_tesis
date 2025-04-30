@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/screens/users/guest/screens/account_screen.dart';
-import 'package:hotels/screens/users/guest/screens/explore_screen.dart';
-class UserDashboard extends StatefulWidget{
+import 'package:hotels/features/guest/profile/account_screen.dart';
+import 'package:hotels/features/guest/explore/explore_screen.dart';
+class GuestDashboard extends StatefulWidget{
   final String correo;
   final String rol;
   
-  const UserDashboard({
+  const GuestDashboard({
     super.key,
     required this.correo ,
     required this.rol, 
     });
   @override
-  State<UserDashboard> createState() => _UserDashboardState();
+  State<GuestDashboard> createState() => _GuestDashboardState();
 }
-class _UserDashboardState extends State<UserDashboard>{
+class _GuestDashboardState extends State<GuestDashboard>{
   int currentPageIndex = 0;
   
   @override

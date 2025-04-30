@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/screens/users/guest/widgets/user_dashboard.dart';
-import 'package:hotels/screens/admin/widgets/admin_dashboard.dart';
-import 'package:hotels/screens/public/login_screen.dart';
-import 'package:hotels/providers/session_provider.dart';
+import 'features/host/dashboard/host_dashboard.dart';
+import 'features/guest/dashboard/guest_dashboard.dart';
+import 'features/admin/dashboard/admin_dashboard.dart';
+import 'features/auth/widgets/login_screen.dart';
+import 'providers/session_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import ''
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
+  //await dotenv.load(fileName: ".env"); 
+  //assert(dotenv.env['WHATSAPP_NUMBER'] != null, 'WHATSAPP_NUMBER no está definido');
+
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
@@ -38,13 +42,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget startWidget;
-
-    if (isLoggedIn && email != null && role != null) {
-      if (role == 'admin') {
-        startWidget = AdminDashboard(correo: email!);
-      } else {
-        startWidget = UserDashboard(correo: email!);
+    final sessionProvider = Provider.of<SessionProvider>(context);
+    if (isLoggedIn && sessionProvider.email != null && sessionProvider.rol != null) {
+      if (sessionProvider.rol == 'admin') {
+        startWidget = AdminDashboard(correo: sessionProvider.email! , rol: 'admin',);
+      } else if(sessionProvider.rol == 'huesped') {
+        startWidget = GuestDashboard(correo: sessionProvider.email!, rol: 'huesped');
       }
+      else if(sessionProvider.rol == 'anfitrion') {
+        startWidget = HostDashboard(correo: sessionProvider.email!, rol: 'anfitrion');
+      }
+      else {
+      startWidget = const LoginScreen();
+    }
+
     } else {
       startWidget = const LoginScreen();
     }

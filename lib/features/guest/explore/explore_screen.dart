@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/screens/users/guest/widgets/detail_screen.dart';
-import 'package:hotels/services/obtener_datos.dart';
-import '../../../../models/Destino.dart';
+import 'package:hotels/features/guest/explore/widgets/detail_screen.dart';
+import 'package:hotels/features/guest/explore/services/obtener_datos.dart';
+import '../../auth/models/Destino.dart';
 
 class ExploreScreen extends StatefulWidget{
 
@@ -114,7 +114,7 @@ class CardPassages extends StatelessWidget{
     
   
               const Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:  EdgeInsets.all(8.0),
                 child: 
                   Text(
                     'Esta es una tarjeta'

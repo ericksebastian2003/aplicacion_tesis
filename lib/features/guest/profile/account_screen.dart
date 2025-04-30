@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../public/login_screen.dart';
+import '../../auth/widgets/login_screen.dart';
 class AccountScreen extends StatefulWidget{
   final String nombre;
   final String rol;
@@ -136,16 +136,29 @@ class _AccountScreenState extends State<AccountScreen>{
           ],
           
         ),
-        
+          
         
       ),
-      floatingActionButton : FloatingActionButton.extended(
+      
+      floatingActionButton : Stack(
+        children: [
+          Positioned(
+            bottom: 20,
+            child:FloatingActionButton.extended(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))
+              ),
               onPressed : _cambiarRol,
+              foregroundColor: Colors.white,
               backgroundColor : colorPrimary,
               icon : const Icon(Icons.swap_horiz),
-              label : Text('Cambiar a ${_rolActual == 'huesped' ? 'Anfitrión' : 'Huésped'}'),
+              label : Text('Cambiar a ${_rolActual == 'huesped' ? 'Anfitrión' : 'Huésped'}',
+              ),
             ),
       
+      )
+      ],
+      )
       );
       
   }

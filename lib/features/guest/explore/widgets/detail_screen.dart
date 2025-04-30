@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hotels/features/guest/explore/widgets/detail_pays.dart';
 
-import '../../../../models/Destino.dart';
+import '../../../auth/models/Destino.dart';
 class DetailScreen extends StatelessWidget{
   final Destino destino;
   const DetailScreen({
@@ -8,12 +9,9 @@ class DetailScreen extends StatelessWidget{
     required this.destino,
   });
   void reserveDestine(BuildContext context)  {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:  Text('Se ha reservado con éxito'),
-        backgroundColor:Colors.grey,
-
-    ),
+     Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => DetailPays(destino: destino)),
     );
         
     }
@@ -61,18 +59,26 @@ class DetailScreen extends StatelessWidget{
               fontSize: 16,
             ),),
             const SizedBox(height: 12),
-            ElevatedButton(
-              style:ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
+            SizedBox(
+              width: double.infinity,
+              height: 55, 
+              child: OutlinedButton(
                 
-              ),
+                style:OutlinedButton.styleFrom(
+                  shape : RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+               
+                
               onPressed: () => reserveDestine(context) , 
-              child: const Text(
+              child:  Text(
                 'Reservar',
                 style:  TextStyle(
-                  color:  Color(0xFF021337),
+                  color:  Colors.black,
 
                 ) ,
+              )
               )
               )
 

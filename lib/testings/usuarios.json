@@ -2,15 +2,27 @@
     "users": [
       {
         "id": 1,
+        "nombre" : "Sebastian",
+        "apellido" : "Caiza",
         "correo": "ericksebas1@mail.com",
         "contrasena": "12345678",
         "rol": "huesped"
       },
       {
         "id": 2,
+        "nombre" : "Erick",
+        "apellido" : "Caiza",
         "correo": "admin@mail.com",
-        "contrasena": "adminpass",
+        "contrasena": "12345678",
         "rol": "admin"
+      },
+      {
+        "id" : 3,
+        "nombre" : "Ian",
+        "apellido" : "Mendoza",
+        "rol" : "anfitrion",
+        "contrasena" : "anfitrion123",
+        "correo" : "anfitrion@mail.com"
       }
     ]
   }
