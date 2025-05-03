@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../data/models/Destino.dart';
+import '../../../../data/models/Alojamientos.dart';
 //Obtener los datos de los luagres
-Future<List<Destino>> getAccommodations() async {
+Future<List<Alojamientos>> getAccommodations() async {
   final String url = 'https://pokeapi.co/api/v2/pokemon?limit=20';
   try
   {
@@ -11,13 +11,13 @@ Future<List<Destino>> getAccommodations() async {
     if(response.statusCode == 200){
         final data = json.decode(response.body);
         final List results = data['results'];
-        List<Destino> respuestas = [];
+        List<Alojamientos> respuestas = [];
         for (var item in results){
           final res = await http.get(Uri.parse(item['url']));
           if(res.statusCode == 200){
             final dataFinal = json.decode(res.body);
             if(dataFinal['sprites'] != null &&  dataFinal ['sprites']['front_default'] != null){
-              respuestas.add(Destino.fromJson(dataFinal));
+              //respuestas.add(Destino.fromJson(dataFinal));
             } 
             
           }

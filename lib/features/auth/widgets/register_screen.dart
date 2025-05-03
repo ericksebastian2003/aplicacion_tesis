@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotels/features/auth/widgets/login_screen.dart';
 import 'package:intl/intl.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -44,6 +47,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _dateSelected = picked;
       });
+    }
+  }
+  Future<void> registerWithFirebase(String email , String password) async{
+    setState(() => loading = true);
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+
+      if(user != null){
+              await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).set({
+        'nombre': _controllers['nombre']!.text.trim(),
+        'apellido': _controllers['apellido']!.text.trim(),
+        'cedula': _controllers['cedula']!.text.trim(),
+        'telefono': _controllers['telefono']!.text.trim(),
+        'email': email,
+        'fechaNacimiento': _dateSelected?.toIso8601String(),
+        'rol': 'huesped',
+        'uid': user.uid,
+    
+      });
+
+      }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cuenta creada correctamente')),
+        );
+         Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
+    }
+    on FirebaseAuthException catch(e){
+      if(e.code == 'email-already-in-use'){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("El correo esta en uso")),
+        );
+      }
+      else if(e.code == 'weak-password'){
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("La contraseña es muy débil")),
+        );
+      }
+      else {
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${e.message}')),
+        );
+      }
     }
   }
 
@@ -108,7 +161,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           width: double.infinity,
                           height: 55,
                           child: ElevatedButton(
-                            onPressed: register,
+                            onPressed: (){
+                              if(_formKey.currentState!.validate()){
+                                final email = _controllers['email']!.text.trim();
+                                final password = _controllers['password']!.text.trim();
+                                registerWithFirebase(email, password);
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorPrimary,
                               shape: RoundedRectangleBorder(

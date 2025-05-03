@@ -5,8 +5,17 @@ import 'features/admin/dashboard/admin_dashboard.dart';
 import 'features/auth/widgets/login_screen.dart';
 import 'providers/session_provider.dart';
 import 'package:provider/provider.dart';
+
+//Importacionde Firebase
+import 'package:firebase_core/firebase_core.dart';
 void main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized();
+  
+  //iniclaizacion de Foirebase
+  await Firebase.initializeApp();
+  
   final sessionProvider = SessionProvider();
   await sessionProvider.loadSessionFromPrefs();
 

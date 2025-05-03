@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/Destino.dart';
+import '../../../../data/models/Alojamientos.dart';
 
 class DetailAccomodation extends StatelessWidget{
-  final Destino accommodation;
+  final Alojamientos accommodation;
   const DetailAccomodation({
     super.key,
     required this.accommodation,

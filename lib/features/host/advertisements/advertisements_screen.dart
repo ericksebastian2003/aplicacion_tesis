@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/data/models/Destino.dart';
+import 'package:hotels/data/models/Alojamientos.dart';
 import './widgets/detail_accomodation.dart';
 import './services/get_accomodations.dart';
 import './widgets/create_accomodation_screen.dart';
@@ -44,7 +44,7 @@ class _AdvertisementsScreenState extends State<AdvertisementsScreen> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<Destino>>(
+            child: FutureBuilder<List<Alojamientos>>(
               future: getAccommodations(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -76,7 +76,7 @@ class _AdvertisementsScreenState extends State<AdvertisementsScreen> {
           );
         },
         backgroundColor: Colors.blueAccent,
-        child: const Icon(Icons.add),
+        child:const  Icon(Icons.add),
         tooltip: 'Agregar alojamiento',
       ),
     );
@@ -84,7 +84,7 @@ class _AdvertisementsScreenState extends State<AdvertisementsScreen> {
 }
 
 class CardAccomodations extends StatelessWidget {
-  final Destino destino;
+  final Alojamientos destino;
 
   const CardAccomodations({
     super.key,

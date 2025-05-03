@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hotels/features/guest/explore/widgets/detail_screen.dart';
 import 'package:hotels/features/guest/explore/services/obtener_datos.dart';
-import '../../../data/models/Destino.dart';
+import '../../../data/models/Alojamientos.dart';
 
 class ExploreScreen extends StatefulWidget{
 
   const ExploreScreen({super.key});
 
+    @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
@@ -25,7 +27,47 @@ class _ExploreScreenState extends State<ExploreScreen>{
           ),
           backgroundColor: Colors.transparent,
         ),
-        body: FutureBuilder(
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('alojamientos').snapshots(), 
+          builder: (context , snapshot){
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+              return Center(
+                child: Text(
+                  "No hay alojamientos disponibles",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              );
+            }
+            final alojamientos = snapshot.data!.docs.map(
+              (doc) {
+                final data = doc.data() as Map<String,dynamic>;
+                return Alojamientos.fromFirestore(data);
+              }
+            ).toList();
+            return ListView.builder(
+              itemCount: alojamientos.length,
+              itemBuilder: (context , index){
+                final alojamiento = alojamientos[index];
+                return CardPassages(alojamientos: alojamiento);
+              },
+              );   
+              }
+        )
+    );
+    }
+        
+        
+        
+        /* Para cuando se genera de la API REAL 
+        FutureBuilder(
           future:obtenerDestinos(),
           builder: (context, snapshot) {
           if(snapshot.hasData){
@@ -62,68 +104,89 @@ class _ExploreScreenState extends State<ExploreScreen>{
       
         ),
       );
+      */
         
 }
-}
-class CardPassages extends StatelessWidget{
-  final Destino destino;
-  const CardPassages({super.key , required this.destino});
+class CardPassages extends StatelessWidget {
+  final Alojamientos alojamientos;
+
+  const CardPassages({super.key, required this.alojamientos});
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.pushReplacement(
-          context, 
-          MaterialPageRoute(builder: (context) => DetailScreen(destino: destino),
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(destino: alojamientos),
           ),
-          );
+        );
       },
-    child:  Card(
-              elevation: 4,
-              margin : const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 12,
+      child: Card(
+        margin: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 12,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                alojamientos.imagen,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.image_not_supported),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:[
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12)
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      alojamientos.nombre,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
-                    child: Image.network(
-                      destino.imagen ,
-                      width: double.infinity,
-                      height: 180,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => 
-                        const Icon(Icons.image_not_supported),
-                      ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(destino.nombre ,
-                    style: const TextStyle(
-                    fontWeight: FontWeight.bold,
                   ),
-                      ),
-                    ),
-    
-  
-              const Padding(
-                padding:  EdgeInsets.all(8.0),
-                child: 
                   Text(
-                    'Esta es una tarjeta'
-                  )
+                    alojamientos.ubicacion,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
-            ],
-      
-          ),
-        )
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                bottom: 8.0,
+              ),
+              child: Text(
+                '\$${alojamientos.precio.toString()} por noche',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
-    }
   }
+}

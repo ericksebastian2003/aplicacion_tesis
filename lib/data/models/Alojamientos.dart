@@ -1,29 +1,38 @@
-class Destino {
+class Alojamientos {
   final String nombre;
   final String imagen;
   final int precio;
   final String descripcion;
+  final String ubicacion;
+  final bool disponible;
+
+  /*
   final int numeroHabitacion;
   final int numeroCamas;
   final int numeroHuespedes;
   final int numeroBanios;
+  
+  */
 
 
-
-  Destino({
+  Alojamientos({
     required this.nombre,
     required this.imagen,
     required this.descripcion,
-    required this.numeroBanios,
+  
+    required this.precio,
+    required this.ubicacion,
+    required this.disponible,
+/*
+  required this.numeroBanios,
     required this.numeroCamas,
     required this.numeroHabitacion,
     required this.numeroHuespedes,
-    required this.precio,
-
+ */
    
 
   });
-  factory Destino.fromJson(Map<String,dynamic> json){
+  /*factory Destino.fromJson(Map<String,dynamic> json){
     return Destino(
       nombre:json['name'],
       imagen: json['sprites']?['front_default'] ?? '',
@@ -36,5 +45,16 @@ class Destino {
 
       );
   }
+*/
+factory Alojamientos.fromFirestore(Map<String , dynamic> json){
+  return Alojamientos(
+       nombre:json['nombre'],
+      imagen: json['img'] ,
+      ubicacion : json['ubicacion'],
+      precio: json['precio'],
+      descripcion : json ['descripcion'],
+      disponible: json['disponible']
 
+  );
+}
 }

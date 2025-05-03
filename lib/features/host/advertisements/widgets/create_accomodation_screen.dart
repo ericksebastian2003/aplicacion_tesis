@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotels/data/models/Destino.dart';
+import 'package:hotels/data/models/Alojamientos.dart';
 
 
 class CreateAccomadationScreen extends StatelessWidget{

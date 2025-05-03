@@ -22,6 +22,7 @@ class _GuestDashboardState extends State<GuestDashboard>{
     final List<Widget> _pages =[
     ExploreScreen(),
     Center(child: Text('Favoritos')),
+    Center(child: Text('Reservas')),
     AccountScreen(nombre: widget.correo , rol: widget.rol,),
   ];
     return Scaffold(
@@ -53,6 +54,10 @@ Widget userNavigationBar({required int currentIndex , required Function(int) onT
               selectedIcon: Icon(Icons.favorite),
               icon: Icon(Icons.favorite_outline), 
               label: 'Favoritos'),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home_repair_service), 
+              icon: Icon(Icons.home_repair_service_outlined), 
+              label: 'Reservas'),
             NavigationDestination(
               selectedIcon: Icon(Icons.person_2),
               icon: Icon(Icons.person_2_outlined), 

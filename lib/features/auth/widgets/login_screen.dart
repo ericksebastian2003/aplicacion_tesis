@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotels/features/host/dashboard/host_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   //WhatshApp
   final String phoneNumber = '593969939834';
   final String message = 'Necesito información de este alojamiento';
-
+  //Variable de firebase
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final authService = AuthService();
 
@@ -53,6 +56,34 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> saveEmail(String correo) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('_correo', correo);
+  }
+  void loginWithFirebase() async{
+    if(!_formKey.currentState!.validate()) return;
+    setState(() => loading = true);
+    try{
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        //usuario
+        final user = userCredential.user;
+        if(user != null){
+          // roles están almacenados en Firestore:
+          final userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
+          final rol = userDoc['rol'];
+          final nombreCompleto = '${userDoc['nombre']} ${userDoc['apellido']}';
+          handleLoginSuccess(user.email!, rol, nombreCompleto);
+        }
+    }
+    on FirebaseAuthException catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: 
+        Text(e.message ?? 'Error de autenticaciom ')),
+      );
+    }
+    finally{
+      setState(() => loading = false);
+    }
   }
   /*Future<void> _openWhatsApp() async {
   final String phoneNumber = '593987654321';
@@ -178,7 +209,7 @@ void login() async {
                         style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                          suffixIcon: Icon(Icons.email, size: 20, color: _emailFocusNode.hasFocus ? colorPrimary : Colors.grey),
+                          prefixIcon: Icon(Icons.email, size: 20, color: _emailFocusNode.hasFocus ? colorPrimary : Colors.grey),
                           filled: true,
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF727374), width: 2)),
@@ -234,7 +265,7 @@ void login() async {
                           width: double.infinity,
                           height: 55,
                           child: ElevatedButton(
-                            onPressed: login,
+                            onPressed: loginWithFirebase,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorPrimary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

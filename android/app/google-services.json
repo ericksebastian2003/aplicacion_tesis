@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859835648756",
+    "project_id": "airbnbfake-ff305",
+    "storage_bucket": "airbnbfake-ff305.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859835648756:android:e44096b153e16abf13eca1",
+        "android_client_info": {
+          "package_name": "com.example.hotels"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTjrKkqsq_7iLCQZZ6r2RY5m1UQ2K62X8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
